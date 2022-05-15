@@ -21,6 +21,7 @@ async function run() {
     try {
         await client.connect();
         const itemCollection = client.db('assignment-11').collection('items');
+        const explorCollection = client.db('assignment-11').collection('explor');
         app.get('/item', async (req, res) => {
             const query = {};
             const cursor = itemCollection.find(query);
@@ -33,6 +34,13 @@ async function run() {
             const query = {_id: ObjectId(id)};
             const item =await itemCollection.findOne(query);
             res.send(item);
+        })
+
+        app.get('/explor',async (req, res) =>{
+            const query = {};
+            const cursor = explorCollection.find(query);
+            const explor = await cursor.toArray();
+            res.send(explor);
         })
 
     }
