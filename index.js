@@ -29,19 +29,50 @@ async function run() {
             res.send(items);
         });
 
-        app.get('/item/:id', async(req, res) =>{
-            const id =req.params.id;
-            const query = {_id: ObjectId(id)};
-            const item =await itemCollection.findOne(query);
+        app.get('/item/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const item = await itemCollection.findOne(query);
             res.send(item);
-        })
+        });
 
-        app.get('/explor',async (req, res) =>{
+        app.get('/explor', async (req, res) => {
             const query = {};
             const cursor = explorCollection.find(query);
             const explor = await cursor.toArray();
             res.send(explor);
-        })
+        });
+
+
+        // POST
+        app.post('/item', async (req, res) => {
+            const newItem = req.body;
+            const result = await itemCollection.insertOne(newItem);
+            res.send(result);
+        });
+
+        // UPDATE
+        app.put('/item/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedQuantity = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    quantity: updatedQuantity.quantity
+                }
+            };
+            const result = await itemCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        });
+
+        // DELETE
+        app.delete('/item/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await itemCollection.deleteOne(query);
+            res.send(result);
+        });
 
     }
     finally {
