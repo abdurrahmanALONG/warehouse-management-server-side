@@ -23,15 +23,25 @@ async function run() {
         const itemCollection = client.db('assignment-11').collection('items');
         const explorCollection = client.db('assignment-11').collection('explor');
         app.get('/item', async (req, res) => {
+            const email=req.query.email;
+           if(email){
+            const query = {email : email};
+            const cursor = itemCollection.find(query);
+            const items = await cursor.toArray();
+            res.send(items);
+           }
+           else{
             const query = {};
             const cursor = itemCollection.find(query);
             const items = await cursor.toArray();
             res.send(items);
+           }
         });
 
         app.get('/item/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
+            console.log(id);
             const item = await itemCollection.findOne(query);
             res.send(item);
         });
@@ -59,7 +69,7 @@ async function run() {
             const options = { upsert: true };
             const updatedDoc = {
                 $set: {
-                    quantity: updatedQuantity.quantity
+                    quantity: updatedQuantity.totalNewQuantity
                 }
             };
             const result = await itemCollection.updateOne(filter, updatedDoc, options);
@@ -81,16 +91,6 @@ async function run() {
 }
 
 run().catch(console.dir);
-
-
-// client.connect(err => {
-//     const collection = client.db("test").collection("devices");
-//     console.log('Assignment -11 -projects Connected');
-//     // perform actions on the collection object
-//     client.close();
-// });
-
-
 
 app.get('/', (req, res) => {
     res.send('running assignment-11');
