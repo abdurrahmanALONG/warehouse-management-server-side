@@ -23,19 +23,19 @@ async function run() {
         const itemCollection = client.db('assignment-11').collection('items');
         const explorCollection = client.db('assignment-11').collection('explor');
         app.get('/item', async (req, res) => {
-            const email=req.query.email;
-           if(email){
-            const query = {email : email};
-            const cursor = itemCollection.find(query);
-            const items = await cursor.toArray();
-            res.send(items);
-           }
-           else{
-            const query = {};
-            const cursor = itemCollection.find(query);
-            const items = await cursor.toArray();
-            res.send(items);
-           }
+            const email = req.query.email;
+            if (email) {
+                const query = { email: email };
+                const cursor = itemCollection.find(query);
+                const items = await cursor.toArray();
+                res.send(items);
+            }
+            else {
+                const query = {};
+                const cursor = itemCollection.find(query);
+                const items = await cursor.toArray();
+                res.send(items);
+            }
         });
 
         app.get('/item/:id', async (req, res) => {
