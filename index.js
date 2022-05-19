@@ -25,7 +25,7 @@ async function run() {
         const explorCollection = client.db('assignment-11').collection('explor');
 
         // AUTH API
-        app.POST('/login', async(req, res) => {
+        app.post('/login', async(req, res) => {
             const user = req.body;
             const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
                 expiresIn: '1d'
