@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { verify } = require('jsonwebtoken');
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 
@@ -11,6 +12,13 @@ const app = express();
 //middleware
 app.use(cors());
 app.use(express.json());
+
+
+function verifyJWT(req, res, next){
+    const authHeader =req.headers.authorization;
+    console.log('inside verifyJWT', authHeader);
+    next();
+}
 
 
 
@@ -31,6 +39,15 @@ async function run() {
                 expiresIn: '1d'
             });
             res.send({accessToken});
+        })
+
+        // MYITEMS COLLECTION API
+        app.get('/item',verifyJWT, async(req, res) => {
+            const email =req.query.email;
+            const query = {email: email};
+            const cursor = itemCollection.find(query);
+            const myItems = await cursor.toArray();
+            res.send(myItems);
         })
 
 
