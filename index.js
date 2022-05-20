@@ -14,11 +14,11 @@ app.use(cors());
 app.use(express.json());
 
 
-function verifyJWT(req, res, next){
-    const authHeader =req.headers.authorization;
-    console.log('inside verifyJWT', authHeader);
-    next();
-}
+// function verifyJWT(req, res, next){
+//     const authHeader =req.headers.authorization;
+//     console.log('inside verifyJWT', authHeader);
+//     next();
+// }
 
 
 
@@ -42,7 +42,9 @@ async function run() {
         })
 
         // MYITEMS COLLECTION API
-        app.get('/item',verifyJWT, async(req, res) => {
+        app.get('/items', async(req, res) => {
+            const authHeader =req.headers.authorization;
+            console.log(authHeader);
             const email =req.query.email;
             const query = {email: email};
             const cursor = itemCollection.find(query);
