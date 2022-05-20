@@ -14,12 +14,22 @@ app.use(cors());
 app.use(express.json());
 
 
-// function verifyJWT(req, res, next){
-//     const authHeader =req.headers.authorization;
-//     console.log('inside verifyJWT', authHeader);
-//     next();
-// }
+ 
 
+// const verifyJWT = (req, res, next) =>{
+//     const authHeader = req.headers.authorization;
+//     if(!authHeader){
+//         return res.status(401).send({message: 'unauthorized'});
+//     }
+//     const token = authHeader.split(' ')[1];
+//     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) =>{
+//         if(err){
+//             return res.status(403).send({message: 'forbidden'})
+//         }
+//         req.decoded= decoded;
+//         next();
+//     })
+// }
 
 
 
@@ -32,30 +42,22 @@ async function run() {
         const itemCollection = client.db('assignment-11').collection('items');
         const explorCollection = client.db('assignment-11').collection('explor');
 
-        // AUTH API
-        app.post('/login', async(req, res) => {
-            const user = req.body;
-            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-                expiresIn: '1d'
-            });
-            res.send({accessToken});
-        })
+        // // AUTH API
+        // app.post('/login', async(req, res) => {
+        //     const user = req.body;
+        //     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        //         expiresIn: '1d'
+        //     });
+        //     res.send({accessToken});
+        // })
 
-        // MYITEMS COLLECTION API
-        app.get('/items', async(req, res) => {
-            const authHeader =req.headers.authorization;
-            console.log(authHeader);
-            const email =req.query.email;
-            const query = {email: email};
-            const cursor = itemCollection.find(query);
-            const myItems = await cursor.toArray();
-            res.send(myItems);
-        })
+
 
 
         // SERVER API
         app.get('/item', async (req, res) => {
             const email = req.query.email;
+            console.log(email);
             if (email) {
                 const query = { email: email };
                 const cursor = itemCollection.find(query);
